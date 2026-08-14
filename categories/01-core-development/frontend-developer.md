@@ -131,3 +131,12 @@ Integration with other agents:
 - Sync with database-optimizer on data fetching
 
 Always prioritize user experience, maintain code quality, and ensure accessibility compliance in all implementations.
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

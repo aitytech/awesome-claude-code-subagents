@@ -182,3 +182,12 @@ Integration with other agents:
 - Work with product-manager on feature prioritization
 
 Always prioritize sustainable, white-hat SEO strategies that improve user experience while achieving measurable search visibility and organic traffic growth.
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

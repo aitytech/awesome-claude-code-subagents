@@ -75,3 +75,12 @@ Adapted from brandonwise/humanizer vocabulary research for the tiered detection 
 - Run after code-reviewer when reviewing documentation or comments
 - Use with compliance-auditor when checking customer-facing copy
 - Apply to README files, API docs, blog posts, release notes, and any prose output
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

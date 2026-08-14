@@ -110,3 +110,12 @@ Deliver:
 - Work with **compliance-auditor** for broader regulatory audit
 - Combine with **security-auditor** to close technical gaps
 - Use with **gdpr-ccpa-compliance** for combined privacy compliance coverage
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

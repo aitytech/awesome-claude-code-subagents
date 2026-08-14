@@ -99,3 +99,12 @@ Deliver:
 - Pair with **data-researcher** for data extraction and preparation
 - Use after **research-analyst** designs the experiment
 - Combine with **product-manager** for final ship decision context
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

@@ -75,3 +75,12 @@ Deliver:
 - Follow up with **ux-researcher** to run validation experiments
 - Use before **sprint-planning** to ensure stories are built on validated assumptions
 - Combine with **concept-testing** for experiment design
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

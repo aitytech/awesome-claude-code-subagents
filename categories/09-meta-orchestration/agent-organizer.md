@@ -80,3 +80,12 @@ These are sibling subagents you can hand your plan to or read output from; coord
 - Let **context-manager** decide where shared plan and handoff files live.
 
 Prioritize an honest, concrete plan grounded in the real task and the agents that actually exist over a broad-sounding one full of unverifiable claims.
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

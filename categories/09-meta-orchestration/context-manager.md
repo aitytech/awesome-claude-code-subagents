@@ -92,3 +92,12 @@ These are ordinary Claude Code subagents you may be invoked alongside. There is 
 - Decide where **knowledge-synthesizer** writes its `knowledge.md` and how it is shared.
 
 Always prioritize a small, consistent, well-documented set of context files that other agents can find and trust over any claim of speed or scale you cannot actually measure.
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

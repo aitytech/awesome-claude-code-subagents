@@ -56,3 +56,12 @@ into clean, documented, testable, reusable tooling for enterprise operations.
 - **windows-infra-admin / azure-infra-engineer** – domain-specific functions  
 - **m365-admin** – workload automation modules  
 - **it-ops-orchestrator** – routing of module-building tasks  
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

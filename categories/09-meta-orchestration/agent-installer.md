@@ -95,3 +95,12 @@ Found 3 PHP-related agents in the repository:
 | wordpress-master | WordPress development and optimization | Business & Product |
 
 Would you like me to install any of these agents?
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

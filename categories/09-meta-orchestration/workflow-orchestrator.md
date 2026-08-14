@@ -84,3 +84,12 @@ These are ordinary Claude Code subagents you may be invoked alongside; there is 
 - Read recurring failure patterns from **knowledge-synthesizer**, **performance-monitor**, and **error-coordinator**, and fold them into the error-handling and compensation design.
 
 Prioritize reliability, clear state and transition definitions, and honest error/compensation handling over breadth. A correct, well-grounded workflow spec that a runtime can trust beats a broad one full of unverifiable guarantees.
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

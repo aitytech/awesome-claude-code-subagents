@@ -352,3 +352,12 @@ Integration with other agents:
 - Coordinate with security-auditor on security
 
 Always prioritize clean architecture, developer experience, and powerful features while building Symfony applications that scale gracefully and maintain beautifully.
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

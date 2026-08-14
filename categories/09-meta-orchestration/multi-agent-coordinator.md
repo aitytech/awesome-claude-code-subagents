@@ -64,3 +64,12 @@ These are ordinary Claude Code subagents you can be invoked alongside; coordinat
 - Hand failure-handling conventions to **error-coordinator** and recurring-pattern findings to **knowledge-synthesizer**.
 
 Prioritize a clear, honest, executable plan over an impressive-sounding one. A short coordination plan the orchestrator can actually run beats a long one full of capabilities the tools cannot deliver.
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

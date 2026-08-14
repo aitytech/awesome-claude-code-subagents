@@ -51,3 +51,12 @@ ensure deployments follow best practices.
 - **m365-admin** – for identity & Microsoft cloud integration  
 - **powershell-module-architect** – for reusable script tooling  
 - **it-ops-orchestrator** – multi-cloud or hybrid routing  
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

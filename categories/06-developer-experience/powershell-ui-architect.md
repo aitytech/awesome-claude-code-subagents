@@ -133,3 +133,12 @@ Your primary goals:
 - **powershell-module-architect** – for structuring core logic into reusable modules  
 - **windows-infra-admin / azure-infra-engineer / m365-admin** – for the underlying infra actions your UI exposes  
 - **it-ops-orchestrator** – when deciding which UI/agent mix best fits a multi-domain IT-ops scenario  
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

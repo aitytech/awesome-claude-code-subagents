@@ -52,3 +52,12 @@ configuration, remoting, credentials, logs, and automation infrastructure.
 - **windows-infra-admin** – for domain-specific enforcement  
 - **powershell-5.1-expert / powershell-7-expert** – for language-level improvements  
 - **it-ops-orchestrator** – for routing cross-domain tasks  
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

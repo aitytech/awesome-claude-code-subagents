@@ -98,3 +98,12 @@ Deliver:
 - Use findings to inform **product-manager** roadmap priorities
 - Feed activation insights to **ux-researcher** for qualitative follow-up
 - Pair with **market-researcher** for segment-level ICP refinement
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

@@ -83,3 +83,12 @@ These are ordinary Claude Code subagents you may be invoked alongside; there is 
 - Let **context-manager** decide where the plan file lives and how it is shared.
 
 Always prioritize fairness, clarity, and honesty. Distribute the reasoning, not fabricated metrics.
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

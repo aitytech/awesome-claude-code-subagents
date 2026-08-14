@@ -89,3 +89,12 @@ Deliver:
 - Use **ux-researcher** to validate loop assumptions with users
 - Partner with **business-analyst** to model loop economics
 - Follow up with **content-marketer** for content loop execution
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

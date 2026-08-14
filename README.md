@@ -29,6 +29,13 @@
 
 This repository serves as the definitive collection of Claude Code subagents, specialized AI assistants designed for specific development tasks.
 
+> **AityTech fork note:** this is a maintained fork of [VoltAgent/awesome-claude-code-subagents](https://github.com/VoltAgent/awesome-claude-code-subagents). On top of upstream, every agent definition here carries two reliability fixes (a required "final response" contract so an agent can't silently end on an idle/progress update, and a context-manager step rewritten to infer from the prompt/repo directly instead of waiting on an agent that may never respond) found while dogfooding these agents on a real production codebase. See [`docs/audit-fix-workflow.md`](docs/audit-fix-workflow.md) for the accompanying issue-fix process these agents are meant to support. Install this fork instead of upstream to get both:
+>
+> ```bash
+> claude plugin marketplace add aitytech/awesome-claude-code-subagents
+> claude plugin install <plugin-name>
+> ```
+
 > **A note on contributions:** We don't accept PRs whose primary purpose is to promote a product, company, or personal project. Subagents must be genuinely useful to Claude Code users and stay vendor-neutral in their content. If you'd like to get your project in front of this community, you can [sponsor the repo](#sponsors) instead — that's the supported way to surface your work here.
 
 ## Installation

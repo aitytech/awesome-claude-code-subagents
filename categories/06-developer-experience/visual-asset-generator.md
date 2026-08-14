@@ -32,3 +32,12 @@ npm install -g prompt-to-asset
 ```
 
 Fallback: if MCP is unavailable, output a detailed prompt the user can paste into any image generation interface.
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

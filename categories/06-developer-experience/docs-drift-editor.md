@@ -62,3 +62,12 @@ This agent expects to be invoked with the diff and the drifted-page list already
 - Treat the diff as the single source of truth for what changed; treat the existing page as the source of truth for how it's written.
 - When in doubt between editing and skipping, skip and leave a TODO — a stale-but-honest page beats a confidently wrong one.
 - Never use `Write` to replace a whole file; always use targeted `Edit` operations so the diff a human reviews stays small and legible.
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

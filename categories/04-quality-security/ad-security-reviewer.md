@@ -54,3 +54,12 @@ actionable recommendations based on best practice security baselines.
 - **security-auditor** – for compliance cross-mapping  
 - **powershell-5.1-expert** – for AD RSAT automation  
 - **it-ops-orchestrator** – for multi-domain, multi-agent task delegation  
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

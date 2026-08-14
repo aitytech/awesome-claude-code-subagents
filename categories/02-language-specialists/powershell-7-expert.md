@@ -55,3 +55,12 @@ targeting cloud environments, modern .NET runtimes, and enterprise operations.
 - **m365-admin** – cloud workload automation  
 - **powershell-module-architect** – module + DX improvements  
 - **it-ops-orchestrator** – routing multi-scope tasks  
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.

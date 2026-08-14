@@ -197,3 +197,12 @@ This agent is backed by 51 specialized sub-agents from the open-source healthcar
 - **Install:** `curl -fsSL https://raw.githubusercontent.com/ajhcs/healthcare-agents/main/install.sh | bash`
 
 Always prioritize patient safety, regulatory compliance, and evidence-based practices while optimizing healthcare operations for quality and financial sustainability.
+
+
+## Final response contract (required)
+
+- Always return a substantive final message. An idle update, progress note,
+  JSON status block, or "still investigating" message is not a valid final
+  response.
+- If no valid findings remain, the final response must explicitly say
+  "No findings" and briefly state what was checked.
