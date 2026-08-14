@@ -114,6 +114,21 @@ Trước khi viết fix:
 > cấu hình được (deterministic), **không phải** collision-detection (runtime,
 > không test được, có thể đặt launcher ngay dưới con trỏ user).
 
+**Báo cáo sai không chỉ ở phần mô tả bug — code fix ĐỀ XUẤT trong báo cáo cũng có thể
+sai.** Đừng copy nguyên si snippet gợi ý rồi coi là xong; verify nó thật sự làm đúng
+điều báo cáo muốn, đặc biệt với logic phụ thuộc hành vi DB/ngôn ngữ cụ thể (NULL
+ordering, timezone, làm tròn số, so sánh chuỗi theo locale...) — những thứ code đọc qua
+tưởng đúng nhưng chạy sai vì mặc định của hệ thống khác với trực giác.
+
+> **Ví dụ thật — #883 (erasure cascade block do row fail vĩnh viễn):**
+> Báo cáo tự đề xuất `orderBy: [{ errorMessage: 'asc' }, { cutoverAt: 'asc' }]` để đẩy
+> row đã fail (errorMessage khác null) xuống cuối. Verify bằng `psql` thật trên
+> PostgreSQL: `ORDER BY ... ASC` mặc định là **NULLS LAST**, nghĩa là code y nguyên
+> theo báo cáo sẽ đẩy row **CHƯA fail** (NULL) xuống cuối — ngược hoàn toàn với ý định,
+> khiến bug nặng hơn chứ không nhẹ đi. Sửa đúng bằng
+> `{ errorMessage: { sort: 'asc', nulls: 'first' } }` (tường minh), verify lại bằng
+> Prisma thật + Postgres thật (không chỉ mock) trước khi tin.
+
 ### 03 — Sửa đúng nguyên nhân, không phải đường tắt
 
 - Theo convention có sẵn trong codebase — tìm một chỗ làm đúng gần đó và làm giống vậy.
@@ -229,6 +244,49 @@ GitHub" ở trên) — không dùng tiếng Việt trong commit message hay PR b
   KHÔNG BAO GIỜ là tiếng Việt, xem quy tắc ngôn ngữ ở đầu file.
 - Cập nhật board/tracker ngay khi trạng thái đổi (xem "Cập nhật trạng thái liên tục"),
   không đợi đến bước này mới cập nhật.
+
+---
+
+## Migration an toàn cho production đang chạy (BẮT BUỘC)
+
+Áp dụng cho **mọi thay đổi cần migration schema** (thêm cột, đổi kiểu, thêm constraint,
+thêm enum value, đổi index). Database production đã có dữ liệu thật, đang có traffic
+thật — không phải DB trống để thiết kế tự do.
+
+Trước khi viết migration, tự trả lời đủ các câu sau (không bỏ qua câu nào):
+
+- **Dữ liệu cũ đã tồn tại thì sao?** Cột mới NOT NULL không có DEFAULT sẽ fail ngay khi
+  migrate nếu bảng có sẵn dữ liệu — cần DEFAULT, hoặc nullable + backfill riêng, hoặc
+  2-bước (thêm nullable → backfill → đổi NOT NULL ở migration sau).
+- **Trong lúc migrate, traffic thật vẫn đang ghi vào bảng đó không?** `ALTER TABLE` có
+  thể khoá bảng lâu trên bảng lớn — cân nhắc `CREATE INDEX CONCURRENTLY` thay vì index
+  thường, tách constraint validation ra bước riêng (`NOT VALID` rồi `VALIDATE
+  CONSTRAINT` sau) nếu Postgres hỗ trợ, hoặc chạy off-peak.
+- **Code cũ và code mới có thể cùng chạy song song không?** Deploy không atomic với
+  migration — trong lúc rolling deploy, có thể có replica đang chạy code CŨ đọc/ghi
+  schema MỚI, hoặc code MỚI đọc/ghi schema khi migration CHƯA chạy xong. Migration
+  phải an toàn cho cả hai chiều tương thích ngược (backward-compatible) trong cửa sổ đó.
+- **Rollback path là gì nếu migration lỗi giữa chừng?** Không phải "chạy lại từ đầu" là
+  đủ — nếu migration bị dừng giữa chừng (timeout, connection drop), trạng thái DB còn
+  lại phải an toàn để retry hoặc rollback, không kẹt ở trạng thái nửa vời.
+- **Enum value mới có được MỌI nơi switch/if trên enum đó xử lý chưa?** Cùng nguyên tắc
+  "Enum & Value Completeness" — grep hết mọi nơi tham chiếu enum, đọc từng chỗ, không
+  chỉ thêm giá trị vào schema rồi coi là xong.
+- **Multi-tenant/RLS**: cột/bảng mới có cần RLS policy riêng không? Xem
+  `~/.claude/rules/ecc/common/security.md` và `.claude/rules/siteforce/multi-tenant.md`
+  — bảng chứa dữ liệu tenant thiếu RLS là vi phạm nghiêm trọng theo rule đó.
+- **Partial/WHERE index hoặc constraint** — Prisma DSL không diễn tả được partial unique
+  index; nếu cần, viết raw SQL trong migration (xem `scans_tenant_urlhash_inflight_uniq`,
+  `tier_grace_periods_tenant_pending_uniq` trong `packages/db/prisma/schema.prisma` làm
+  ví dụ đã có sẵn trong repo) — không silently bỏ qua ràng buộc chỉ vì Prisma DSL không
+  hỗ trợ trực tiếp.
+
+**Khi migration cần thiết nhưng vượt quá phạm vi an toàn để làm ngay** (ví dụ: fix
+chính cần cả code change lẫn migration, nhưng migration đó cần review/test kỹ hơn thời
+gian cho phép trong 1 lần fix) — tách phần **an toàn, không cần migration** ra làm ngay
+(nếu có), và file issue riêng cho phần cần migration, ghi rõ lý do tách — đúng tinh
+thần "04b 横展開" (ghi rõ, không im lặng bỏ qua) áp dụng cho cả trường hợp "biết cần sửa
+nhưng cố tình chưa sửa vì rủi ro migration".
 
 ---
 
