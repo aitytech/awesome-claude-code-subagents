@@ -254,23 +254,34 @@ GitHub" ở trên) — không dùng tiếng Việt trong commit message hay PR b
 Review từng issue riêng lẻ không thấy được tương tác GIỮA các fix — bước này bắt buộc
 nhìn toàn cục.
 
-- Chạy `/review` (hoặc tương đương thủ công) trên **toàn bộ diff của nhánh tích hợp so
-  với base thật** (`develop`), không chỉ diff của từng issue.
-- Dispatch tối thiểu 2 agent độc lập, fresh context (không có bias từ quá trình tự fix),
-  theo 2 góc nhìn khác nhau — ví dụ security + test-coverage — chạy song song. Agent tự
-  review lại code mình vừa viết có xu hướng đánh giá cao chính nó; góc nhìn độc lập bắt
-  được cái đó (ví dụ đã xảy ra: agent test-coverage tìm ra pattern lỗi ở dưới mà tự mình
-  review lại code cũ đã bỏ sót).
+- **Review BẮT BUỘC có 2 lớp, không được làm 1 lớp rồi coi là đủ:**
+  1. **Review riêng cho TỪNG issue** — chạy `/review` (hoặc phân tích tương đương) trên
+     đúng diff của từng PR/issue riêng lẻ (`gh pr diff <PR#>`), không phải diff đã gộp
+     chung với các issue khác. Review gộp chung dễ làm loãng/ẩn đi vấn đề riêng của một
+     fix cụ thể — ví dụ một agent review batch có thể bỏ sót chi tiết mà một agent chỉ
+     tập trung đúng 1 PR sẽ bắt được. Đăng kết quả làm **comment trên đúng PR của issue
+     đó** (không chỉ gộp vào 1 báo cáo chung), để member sau này đọc lại đúng ngữ cảnh.
+  2. **Review toàn batch** — chạy `/review` trên **toàn bộ diff của nhánh tích hợp so
+     với base thật** (`develop`), để bắt tương tác GIỮA các fix mà review riêng từng cái
+     không thấy được.
+  Cả hai lớp đều bắt buộc khi có ≥2 issue đã gộp vào 1 nhánh tích hợp — làm 1 trong 2 rồi
+  dừng là chưa đủ.
+- Ở cả hai lớp, dispatch tối thiểu 2 agent độc lập, fresh context (không có bias từ quá
+  trình tự fix), theo 2 góc nhìn khác nhau — ví dụ security + test-coverage — chạy song
+  song. Agent tự review lại code mình vừa viết có xu hướng đánh giá cao chính nó; góc
+  nhìn độc lập bắt được cái đó (ví dụ đã xảy ra: agent test-coverage tìm ra pattern lỗi ở
+  dưới mà tự mình review lại code cũ đã bỏ sót).
 - **Chạy lại test cho MỌI package đã đụng tới trong toàn batch**, không chỉ package của
   issue đang làm — một fix ở issue A có thể ảnh hưởng gián tiếp test của issue B nếu
-  chung file/module.
-- **KHÔNG tin kết quả của `pnpm test` chạy toàn bộ monorepo song song (~38 package) trên
-  máy dùng chung để verify.** Nhiều tiến trình cùng chạy có thể gây `EPIPE`/"Worker
-  exited unexpectedly" ở CẢ những package không hề nằm trong diff (đã thấy thật:
-  `widget-sdk` build fail dù không đụng tới) — false failure do quá tải máy, không phải
-  bug. Chạy `pnpm test --run` **riêng từng package đã đổi** (`cd services/x && pnpm test
-  --run`) với DB env vars đúng (xem port/role thật của môi trường, không tin `.env` mặc
-  định nếu máy có nhiều Postgres container) — kết quả đó mới đáng tin.
+  chung file/module. Chạy **toàn bộ** monorepo (`pnpm test`), không chỉ các package đã
+  đổi — bỏ qua package "chắc không liên quan" là đúng lúc bug ẩn lọt qua.
+- **`pnpm test` chạy full monorepo song song mặc định (~38 package) trên máy dùng chung
+  có thể tự crash một phần** (`EPIPE`/"Worker exited unexpectedly", kể cả ở package
+  không hề nằm trong diff — đã thấy thật: `widget-sdk` build fail dù không đụng tới) —
+  đây là false failure do quá tải máy, không phải bug. Đừng vì thấy lỗi này mà bỏ qua
+  chạy full suite — hạ concurrency (`npx turbo run test --concurrency=3` hoặc thấp hơn)
+  rồi chạy lại **toàn bộ**, với DB env vars đúng (xem port/role thật của môi trường,
+  không tin `.env` mặc định nếu máy có nhiều Postgres container).
 - **Pattern lỗi test hay gặp khi review lại: test chỉ pin "argument shape"
   (`expect(args.orderBy).toEqual(...)`) không chứng minh hành vi/kết quả thật.** Test
   dạng này không bắt được lỗi hoán đổi thứ tự phần tử trong mảng hay sai logic nếu
@@ -407,6 +418,8 @@ Nếu nghĩ một trong các câu dưới đây → **DỪNG LẠI**, đó là �
 | "Issue chỉ liệt kê 5 chỗ, sửa đúng 5 chỗ là xong" | Report là mẫu tìm được, không phải danh sách đầy đủ. 横展開 bắt buộc — quét cùng hình dạng bug trong toàn repo. |
 | "Đang chat tiếng Việt nên comment GitHub tiếng Việt cũng được" | Không. GitHub là nội dung team-facing công khai — chỉ tiếng Anh/tiếng Nhật, không có ngoại lệ dù đang trao đổi tiếng Việt trong phiên. |
 | "Cuối phiên cập nhật board 1 lần cho tiện" | Cập nhật ngay khi trạng thái thật đổi — mỗi issue độc lập theo tiến độ thật của nó. |
+| "Đã review toàn batch rồi, khỏi review riêng từng issue nữa" | Hai lớp review là bắt buộc cả hai, không phải chọn 1. Review batch không thay được review riêng từng PR và ngược lại. |
+| "Full test suite crash do máy quá tải, thôi chạy targeted cho nhanh" | Không được bỏ full suite chỉ vì lần chạy đầu crash — hạ concurrency rồi chạy lại toàn bộ, không né việc chạy hết. |
 
 ---
 
