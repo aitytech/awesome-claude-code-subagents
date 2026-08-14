@@ -247,6 +247,43 @@ GitHub" ở trên) — không dùng tiếng Việt trong commit message hay PR b
 
 ---
 
+## Review toàn batch trước khi merge lên nhánh chính (BẮT BUỘC khi nhiều issue đã gộp)
+
+Áp dụng khi nhiều issue riêng lẻ đã được fix + merge vào một nhánh tích hợp
+(`fix/YYYYMMDD-...`), trước khi nhánh đó được merge tiếp lên `develop`/nhánh chính.
+Review từng issue riêng lẻ không thấy được tương tác GIỮA các fix — bước này bắt buộc
+nhìn toàn cục.
+
+- Chạy `/review` (hoặc tương đương thủ công) trên **toàn bộ diff của nhánh tích hợp so
+  với base thật** (`develop`), không chỉ diff của từng issue.
+- Dispatch tối thiểu 2 agent độc lập, fresh context (không có bias từ quá trình tự fix),
+  theo 2 góc nhìn khác nhau — ví dụ security + test-coverage — chạy song song. Agent tự
+  review lại code mình vừa viết có xu hướng đánh giá cao chính nó; góc nhìn độc lập bắt
+  được cái đó (ví dụ đã xảy ra: agent test-coverage tìm ra pattern lỗi ở dưới mà tự mình
+  review lại code cũ đã bỏ sót).
+- **Chạy lại test cho MỌI package đã đụng tới trong toàn batch**, không chỉ package của
+  issue đang làm — một fix ở issue A có thể ảnh hưởng gián tiếp test của issue B nếu
+  chung file/module.
+- **KHÔNG tin kết quả của `pnpm test` chạy toàn bộ monorepo song song (~38 package) trên
+  máy dùng chung để verify.** Nhiều tiến trình cùng chạy có thể gây `EPIPE`/"Worker
+  exited unexpectedly" ở CẢ những package không hề nằm trong diff (đã thấy thật:
+  `widget-sdk` build fail dù không đụng tới) — false failure do quá tải máy, không phải
+  bug. Chạy `pnpm test --run` **riêng từng package đã đổi** (`cd services/x && pnpm test
+  --run`) với DB env vars đúng (xem port/role thật của môi trường, không tin `.env` mặc
+  định nếu máy có nhiều Postgres container) — kết quả đó mới đáng tin.
+- **Pattern lỗi test hay gặp khi review lại: test chỉ pin "argument shape"
+  (`expect(args.orderBy).toEqual(...)`) không chứng minh hành vi/kết quả thật.** Test
+  dạng này không bắt được lỗi hoán đổi thứ tự phần tử trong mảng hay sai logic nếu
+  object literal tình cờ vẫn giống — cần test dựa trên fixture có "áp dụng" đúng logic
+  thật (order-aware mock tự sort theo đúng argument nhận được) hoặc test tích hợp với DB
+  thật, không chỉ pin cấu trúc argument truyền vào mock.
+- Fix an toàn phát hiện ở bước review này (docstring lỗi thời, test-coverage gap, refactor
+  không đổi hành vi để tăng khả năng test): fix ngay trên branch hardening riêng
+  (`chore/YYYYMMDD-review-hardening`), PR vào nhánh tích hợp, tự review qua comment PR —
+  đúng quy trình 1-đơn-vị-việc-1-branch, không âm thầm sửa trực tiếp trên nhánh tích hợp.
+
+---
+
 ## Migration an toàn cho production đang chạy (BẮT BUỘC)
 
 Áp dụng cho **mọi thay đổi cần migration schema** (thêm cột, đổi kiểu, thêm constraint,
