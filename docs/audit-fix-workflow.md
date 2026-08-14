@@ -263,9 +263,14 @@ nhìn toàn cục.
      đó** (không chỉ gộp vào 1 báo cáo chung), để member sau này đọc lại đúng ngữ cảnh.
   2. **Review toàn batch** — chạy `/review` trên **toàn bộ diff của nhánh tích hợp so
      với base thật** (`develop`), để bắt tương tác GIỮA các fix mà review riêng từng cái
-     không thấy được.
+     không thấy được. Đăng kết quả làm **comment trên PR tổng** (PR nhánh tích hợp →
+     `develop`), cùng nguyên tắc như bên dưới.
   Cả hai lớp đều bắt buộc khi có ≥2 issue đã gộp vào 1 nhánh tích hợp — làm 1 trong 2 rồi
   dừng là chưa đủ.
+  **Kết quả review LUÔN LUÔN đăng dưới dạng comment (`gh pr comment`), KHÔNG BAO GIỜ sửa
+  vào PR description/body (`gh pr edit --body`).** Áp dụng cho cả 2 lớp — PR riêng từng
+  issue lẫn PR tổng. Description là nơi mô tả PR làm gì; comment là nơi ghi lại review đã
+  chạy, tìm thấy gì, đã sửa gì tiếp — hai việc khác nhau, không được gộp làm một.
 - Ở cả hai lớp, dispatch tối thiểu 2 agent độc lập, fresh context (không có bias từ quá
   trình tự fix), theo 2 góc nhìn khác nhau — ví dụ security + test-coverage — chạy song
   song. Agent tự review lại code mình vừa viết có xu hướng đánh giá cao chính nó; góc
@@ -419,6 +424,7 @@ Nếu nghĩ một trong các câu dưới đây → **DỪNG LẠI**, đó là �
 | "Đang chat tiếng Việt nên comment GitHub tiếng Việt cũng được" | Không. GitHub là nội dung team-facing công khai — chỉ tiếng Anh/tiếng Nhật, không có ngoại lệ dù đang trao đổi tiếng Việt trong phiên. |
 | "Cuối phiên cập nhật board 1 lần cho tiện" | Cập nhật ngay khi trạng thái thật đổi — mỗi issue độc lập theo tiến độ thật của nó. |
 | "Đã review toàn batch rồi, khỏi review riêng từng issue nữa" | Hai lớp review là bắt buộc cả hai, không phải chọn 1. Review batch không thay được review riêng từng PR và ngược lại. |
+| "Ghi tóm tắt review vào PR description cho gọn, khỏi tạo comment riêng" | Description mô tả PR làm gì; comment ghi lại review đã chạy. Luôn dùng `gh pr comment`, không sửa description — kể cả PR tổng lẫn PR riêng. |
 | "Full test suite crash do máy quá tải, thôi chạy targeted cho nhanh" | Không được bỏ full suite chỉ vì lần chạy đầu crash — hạ concurrency rồi chạy lại toàn bộ, không né việc chạy hết. |
 
 ---
