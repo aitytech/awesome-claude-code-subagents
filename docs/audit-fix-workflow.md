@@ -290,6 +290,37 @@ nhưng cố tình chưa sửa vì rủi ro migration".
 
 ---
 
+## Terraform / hạ tầng phá hủy (BẮT BUỘC thận trọng)
+
+Kế thừa quyết định #1113: **Claude không tự sửa Terraform trong batch fix này** — mọi
+issue chạm tới `infrastructure/terraform/**` được giao lại cho thành viên phụ trách hạ
+tầng (không tự apply, không tự merge). Phần dưới đây áp dụng cho cả trường hợp phải
+*đọc/review* Terraform (để hiểu behavior, viết issue mô tả đúng) lẫn trường hợp hiếm
+hoi được yêu cầu tường minh chỉnh sửa nó.
+
+- **Không thêm bất kỳ thứ gì mang tính phá hủy vào Terraform** nếu không được yêu cầu
+  tường minh: không set `force_destroy = true`, không hạ `prevent_destroy` đang bật,
+  không đổi thuộc tính buộc provider phải destroy-and-recreate resource (đổi tên, đổi
+  `identifier`, đổi zone/region trên resource stateful), không xoá `lifecycle` block
+  đang bảo vệ dữ liệu (DB, S3/GCS bucket, KMS key, EBS volume).
+- **Mọi thay đổi có khả năng destroy/replace phải chạy `terraform plan` trước và dán
+  nguyên văn phần liệt kê `-/+` (destroy/recreate) hoặc `-` (destroy) vào PR** — không
+  chỉ nói "đã plan xong". Nếu plan cho thấy destroy/replace một resource đang có dữ
+  liệu thật (DB, storage, secret) mà **không phải mục đích chính của thay đổi** → dừng
+  lại, đây là dấu hiệu thay đổi sai hướng, không phải thứ để "amend" cho qua. Nếu
+  destroy/replace đúng là mục đích chính (đã xác nhận với người phụ trách hạ tầng) →
+  vẫn phải ghi rõ thứ tự apply, downtime dự kiến, và có cần snapshot/backup trước khi
+  apply không.
+- **Không tự `terraform apply`** trong quy trình này. Sau khi có plan sạch, review kỹ,
+  bàn giao cho người phụ trách hạ tầng apply — đúng tinh thần "chúng ta không sửa
+  Terraform đâu, member khác sẽ làm".
+- Nếu một issue/lateral-spread finding chỉ *mô tả đúng* một vấn đề hạ tầng nhưng fix
+  thật sự nằm ở Terraform: filed issue riêng, gán cho người phụ trách hạ tầng, ghi rõ
+  resource nào bị ảnh hưởng + có phải destroy/replace không — không tự ý bao gồm phần
+  Terraform vào cùng PR code-fix.
+
+---
+
 ## Không thương lượng
 
 Bốn ranh giới cứng — vi phạm bất kỳ điều nào cũng coi như **chưa xong việc**, dù test có xanh.
